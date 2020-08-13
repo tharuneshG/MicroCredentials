@@ -12,6 +12,7 @@ from models.user import UserModel
 today = date.today()
 mail = Mail(app1)
 
+
 class UserRegister(Resource):
     TABLE_NAME = 'user'
 
@@ -94,16 +95,16 @@ class UserRegister(Resource):
         get_list = UserList.get(self)
         user_list = get_list['users']
         if len(user_list) == 0:
-            num = 0
+            num = '0001'
         else:
             for iterator in user_list:
                 usrid = iterator['user_id']
                 if user_type_id == (usrid.split('-')[0]):
                     latestid = (usrid.split('-')[1])
                 else:
-                    latestid ="-1"
-            num = int(latestid) + 1
-        user_id = user_type_id + '-' + str(num)
+                    latestid = "0000"
+            num = "{:04d}".format(int(latestid)+1)
+        user_id = user_type_id + '-' + num
         return user_id
 
     # Method to generate password
@@ -117,7 +118,7 @@ class UserRegister(Resource):
 
     # Email Generation
     def emailgeneration(self, data, user_id, password):
-        msg = Message('Dear User,', sender='tharunesh.1502247@gmail.com', recipients=[data['email']])
+        msg = Message('User register', sender='tharunesh.1502247@gmail.com', recipients=[data['email']])
         msg.body = "Your user id is " + user_id + " and your password is " + password
         mail.send(msg)
 
