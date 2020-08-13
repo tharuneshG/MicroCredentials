@@ -64,7 +64,6 @@ def generatepdf(policy_id):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=15)
-    print(policy_name)
     pdf.cell(200, 10, txt=f"policy_name: {policy_name}",
              ln=1, align='L')
     pdf.cell(200, 10, txt=f"initial_deposit: {initial_deposit}",
