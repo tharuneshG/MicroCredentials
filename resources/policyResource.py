@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import datetime, timedelta
-from email.mime.text import MIMEText
 
 from flask_mail import Message, Mail
 from flask_restful import Resource, reqparse
@@ -69,6 +68,7 @@ class PolicyRegister(Resource):
                         )
 
     def policyid(self, data):
+        """Generates and returns the policy_id"""
         if data['policy_type'] == 'Vehicle Insurance':
             policy_type_id = 'VI'
         elif data['policy_type'] == 'Travel Insurance':
@@ -104,12 +104,14 @@ class PolicyRegister(Resource):
         return policy_id
 
     def maturityAmount(self, data):
+        """Calculate and returns the maturity amount"""
         amount = int(data['duration_in_years']) * int(data['terms_per_year']) * int(data['term_amount'])
         interest = float(data['interest']) / 100
         maturity_amount = int(data['initial_deposit']) + amount + (amount * interest)
         return maturity_amount
 
     def endDate(self, data):
+        """Calculate and returns the end_date"""
         start_date = datetime.strptime(data['start_date'], '%d/%m/%Y')
         duration = data['duration_in_years']
         total_days = int(duration) * 365
@@ -117,6 +119,7 @@ class PolicyRegister(Resource):
         return end_date
 
     def emailgeneration(self, data, policy_id, end_date):
+        """Sends the email to the admin"""
         msg = Message('Policy register', sender='tharunesh.1502247@gmail.com', recipients=['tharuneshevils@gmail.com'])
         msg.body = f"""Hi Admin
         The policy is successfully registered.The policy {policy_id} is available to the users from {data['start_date']}
@@ -124,6 +127,7 @@ to {end_date} """
         mail.send(msg)
 
     def post(self):
+        """Saves the data to the databse"""
         data = PolicyRegister.parser.parse_args()
         policy_id = self.policyid(data)
         maturity_amount = self.maturityAmount(data)
@@ -145,4 +149,5 @@ to {end_date} """
 
 class PolicyList(Resource):
     def get(self):
+        """Retrieves the data from database"""
         return {'policies': list(map(lambda x: x.json(), PolicyModel.query.all()))}

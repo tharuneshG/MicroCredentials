@@ -77,8 +77,8 @@ class UserRegister(Resource):
                         required=True,
                         )
 
-    # Method to generate user_id
     def userid(self, data):
+        """Generates the  user_id and returns"""
         income = int(data['salary'])
         salary_per_year = income * 12
         if int(salary_per_year) <= 500000:
@@ -107,8 +107,8 @@ class UserRegister(Resource):
         user_id = user_type_id + '-' + num
         return user_id
 
-    # Method to generate password
     def password(self, data):
+        """Generates the passwords and returns"""
         date = today.strftime("%d")
         month = today.strftime("%b")
         random_number = randint(100, 999)
@@ -116,14 +116,14 @@ class UserRegister(Resource):
         password = str(date) + str(month) + str(character) + str(random_number)
         return password
 
-    # Email Generation
     def emailgeneration(self, data, user_id, password):
+        """Sends the email to the user"""
         msg = Message('User register', sender='tharunesh.1502247@gmail.com', recipients=[data['email']])
         msg.body = "Your user id is " + user_id + " and your password is " + password
         mail.send(msg)
 
-    # post method
     def post(self):
+        """Saves the data to the database"""
         data = UserRegister.parser.parse_args()
         user_id = self.userid(data)
         password = self.password(data)
@@ -149,4 +149,5 @@ class UserRegister(Resource):
 
 class UserList(Resource):
     def get(self):
+        """Retrieves the data from database"""
         return {'users': list(map(lambda x: x.json(), UserModel.query.all()))}
