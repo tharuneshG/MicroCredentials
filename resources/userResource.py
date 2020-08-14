@@ -107,7 +107,7 @@ class UserRegister(Resource):
         user_id = user_type_id + '-' + num
         return user_id
 
-    def password(self, data):
+    def password(self):
         """Generates the passwords and returns"""
         date = today.strftime("%d")
         month = today.strftime("%b")
@@ -126,7 +126,7 @@ class UserRegister(Resource):
         """Saves the data to the database"""
         data = UserRegister.parser.parse_args()
         user_id = self.userid(data)
-        password = self.password(data)
+        password = self.password()
         if UserModel.find_by_email(data['email']):
             return {"message": "User with that email id already exists."}, 400
         connection = sqlite3.connect('data.db')
