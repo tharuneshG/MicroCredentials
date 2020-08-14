@@ -103,7 +103,7 @@ class UserRegister(Resource):
                     latestid = (usrid.split('-')[1])
                 else:
                     latestid = "0000"
-            num = "{:04d}".format(int(latestid)+1)
+            num = "{:04d}".format(int(latestid) + 1)
         user_id = user_type_id + '-' + num
         return user_id
 
@@ -119,7 +119,7 @@ class UserRegister(Resource):
     def emailgeneration(self, data, user_id, password):
         """Sends the email to the user"""
         msg = Message('User register', sender='tharunesh.1502247@gmail.com', recipients=[data['email']])
-        msg.body = "Your user id is " + user_id + " and your password is " + password
+        msg.body = "Your user id is %s and your password is %s" % (user_id, password)
         mail.send(msg)
 
     def post(self):

@@ -122,8 +122,8 @@ class PolicyRegister(Resource):
         """Sends the email to the admin"""
         msg = Message('Policy register', sender='tharunesh.1502247@gmail.com', recipients=['tharuneshevils@gmail.com'])
         msg.body = f"""Hi Admin
-        The policy is successfully registered.The policy {policy_id} is available to the users from {data['start_date']}
-to {end_date} """
+        The policy is successfully registered.The policy %s is available to the users from %s to %s """ % (
+            policy_id, data['start_date'], end_date)
         mail.send(msg)
 
     def post(self):
@@ -137,9 +137,9 @@ to {end_date} """
 
         query = "INSERT INTO {table} VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)".format(table=self.TABLE_NAME)
         cursor.execute(query, (
-        data['policy_name'], data['start_date'], end_date, data['duration_in_years'], data['company_name'],
-        data['initial_deposit'], data['policy_type'], data['user_type'], data['terms_per_year'],
-        data['term_amount'], data['interest'], maturity_amount, policy_id))
+            data['policy_name'], data['start_date'], end_date, data['duration_in_years'], data['company_name'],
+            data['initial_deposit'], data['policy_type'], data['user_type'], data['terms_per_year'],
+            data['term_amount'], data['interest'], maturity_amount, policy_id))
         connection.commit()
         self.emailgeneration(data, policy_id, end_date)
         connection.close()
